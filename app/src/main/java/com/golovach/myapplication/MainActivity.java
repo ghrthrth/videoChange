@@ -3,8 +3,10 @@ package com.golovach.myapplication;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,12 +34,18 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.gowtham.library.utils.CompressOption;
 import com.gowtham.library.utils.LogMessage;
 import com.gowtham.library.utils.TrimVideo;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int trimType;
     private Uri videoUri;
 
-
+    private FirebaseAuth mAuth;
     ActivityResultLauncher<Intent> videoTrimResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -139,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             onDefaultTrimClicked();
         }
         if (v.getId() == R.id.fab) {
+            ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Пожалуйста, подождите...");
+            progressDialog.setCancelable(false); // Это предотвратит возможность отмены диалога
+            progressDialog.show();
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Предупреждение")
                     .setMessage("Вы уверены, что хотите выйти из аккаунта?")
@@ -146,8 +158,48 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             try {
-                                FirebaseAuth.getInstance().signOut();
-                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                // Получаем ссылку на базу данных
+                                DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users");
+                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                                String userId = currentUser.getUid();
+
+                                // Получаем текущую информацию о пользователе
+                                SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                String username = sharedPreferences.getString("username", "");
+                                HashMap<String, Object> userInfo = new HashMap<>();
+                                userInfo.put("username", username);
+                                userInfo.put("email", currentUser.getEmail());
+                                userInfo.put("isLogged", false); // Устанавливаем флаг isLogged в false
+
+                                // Обновляем все необходимые данные в localStorage
+                                editor.putString("username", username);
+                                editor.putString("email", currentUser.getEmail());
+                                editor.putBoolean("isLogged", false);
+
+                                ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+                                progressDialog.setMessage("Пожалуйста, подождите...");
+                                progressDialog.setCancelable(false); // Это предотвратит возможность отмены диалога
+                                progressDialog.show();
+                                // Применяем изменения
+                                editor.apply();
+
+                                // Записываем обновленную информацию о пользователе обратно в базу данных
+                                databaseRef.child(userId).setValue(userInfo)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    // Если данные успешно обновлены, выходим из системы
+                                                    FirebaseAuth.getInstance().signOut();
+                                                    progressDialog.dismiss();
+                                                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                                } else {
+                                                    // Если произошла ошибка при обновлении данных
+                                                    Toast.makeText(MainActivity.this, "Не удалось выйти из аккаунта", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -161,6 +213,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     })
                     .show();
         }
+
+
+
+
+
+
 
     }
 

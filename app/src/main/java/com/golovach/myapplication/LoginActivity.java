@@ -1,6 +1,8 @@
 package com.golovach.myapplication;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -66,6 +76,73 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
+
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = binding.emailEt.getText().toString();
+                String password = binding.passwordEt.getText().toString();
+                // Создаем диалоговое окно
+                ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Пожалуйста, подождите...");
+                progressDialog.setCancelable(false); // Это предотвратит возможность отмены диалога
+                progressDialog.show();
+                // Войдите в систему с помощью Firebase Auth
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    // Вход успешен, обновите UI с информацией о пользователе
+                                    Log.d(TAG, "signInWithEmail:success");
+                                    progressDialog.dismiss();
+
+                                    // Получаем ссылку на базу данных
+                                    DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("users");
+                                    String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                                    // Получаем текущую информацию о пользователе
+                                    databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            String username = dataSnapshot.child("username").getValue(String.class);
+
+                                            // Обновляем данные в SharedPreferences
+                                            SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            editor.putString("username", username);
+                                            editor.putString("email", email);
+                                            editor.putBoolean("isLogged", true);
+                                            editor.apply();
+
+                                            // Обновляем данные в базе данных Firebase
+                                            HashMap<String, Object> userInfo = new HashMap<>();
+                                            userInfo.put("username", username);
+                                            userInfo.put("email", email);
+                                            userInfo.put("isLogged", true);
+                                            databaseRef.child(userId).updateChildren(userInfo);
+
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            finish();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+                                            // Если произошла ошибка при получении данных
+                                            Toast.makeText(LoginActivity.this, "Не удалось получить данные пользователя", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    // Если вход не удался, отобразите сообщение для пользователя.
+                                    Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                    Toast.makeText(LoginActivity.this, "Аутентификация не удалась.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
+
     }
 
     @Override

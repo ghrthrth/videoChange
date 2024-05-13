@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "542978971022",
+    "firebase_url": "https://videotrimmer-e1042-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "videotrimmer-e1042",
+    "storage_bucket": "videotrimmer-e1042.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542978971022:android:89c422766094728515c0df",
+        "android_client_info": {
+          "package_name": "com.golovach.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542978971022-m29s62n45ui1onutfun57u72fh6oi7lk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.golovach.myapplication",
+            "certificate_hash": "e51cd0d79b583433bfa7a37e3f7c6ab0b82bebc2"
+          }
+        },
+        {
+          "client_id": "542978971022-7vu0fj3k15tbt8838j6n227qi4aiti2c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKfF2INrwC-aMW2E9HX-7g5LdWtygWRM4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542978971022-7vu0fj3k15tbt8838j6n227qi4aiti2c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

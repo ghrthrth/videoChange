@@ -1,6 +1,7 @@
 package com.golovach.myapplication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -21,7 +22,15 @@ public class SplashScreen extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
                     if (mAuth.getCurrentUser() != null) {
-                        startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                        // Получаем текущую информацию о пользователе
+                        SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+                        boolean isLogged = sharedPreferences.getBoolean("isLogged", true);
+
+                        if (isLogged) {
+                            startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                        } else {
+                            SplashScreen.this.startActivity(new Intent(SplashScreen.this, LoginActivity.class));
+                        }
                         finish();
                     } else {
                         SplashScreen.this.startActivity(new Intent(SplashScreen.this, LoginActivity.class));
@@ -31,3 +40,4 @@ public class SplashScreen extends AppCompatActivity {
                 DELAY_MILLIS);
     }
 }
+
