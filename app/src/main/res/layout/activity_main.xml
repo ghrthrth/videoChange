@@ -27,7 +27,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_default_trim"
                     style="@style/BtnStyle"
-                    android:text="Selet video-default trim" />
+                    android:text="Выбрать видео для редактирования" />
 
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

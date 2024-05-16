@@ -9,7 +9,7 @@
     <string name="hint_min_max">Min duration(in secs)</string>
     <string name="txt_min_max">Selet video-minGap to maxgap trim</string>
     <string name="txt_option">Options</string>
-    <string name="head_note">Power by Dzmitriy Golovach</string>
+    <string name="head_note">Разработано - Дмитрий Головач СП-091 2024</string>
     <string name="txt_max_duration_secs">Max duration(in secs)</string>
     <string name="txt_enter_fixed_trim_duration_in_secs">Enter fixed trim duration(in secs)</string>
     <!-- TODO: Remove or change this placeholder text -->

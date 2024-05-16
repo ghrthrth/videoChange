@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu_medium"
-        android:text="Sign up"
+        android:text="Регистрация"
         android:textSize="30sp"
         android:layout_marginStart="55dp"
         android:layout_marginTop="34dp"
@@ -91,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
             android:fontFamily="@font/ubuntu_light"
-            android:hint="Username"
+            android:hint="Логин"
             />
 
     </LinearLayout>
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
             android:fontFamily="@font/ubuntu_light"
-            android:hint="Password"
+            android:hint="Пароль"
             android:inputType="textPassword"
             />
 
@@ -134,7 +134,7 @@
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/ubuntu_light"
         android:layout_marginTop="40dp"
-        android:text="Sign up"
+        android:text="Зарегистрироваться"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_lin" />
@@ -146,7 +146,7 @@
         android:layout_marginStart="72dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="or register with "
+        android:text="или с помощью"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sign_up_btn" />

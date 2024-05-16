@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ubuntu_medium"
-        android:text="Login"
+        android:text="Авторизация"
         android:textSize="30sp"
         android:layout_marginStart="55dp"
         android:layout_marginTop="34dp"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="9dp"
             android:fontFamily="@font/ubuntu_light"
-            android:hint="Password"
+            android:hint="Пароль"
             android:inputType="textPassword"
             />
 
@@ -95,7 +95,7 @@
         android:backgroundTint="@color/blue"
         android:fontFamily="@font/ubuntu_light"
         android:layout_marginTop="50dp"
-        android:text="Login"
+        android:text="Войти"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password_lin" />
@@ -112,20 +112,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New to here?"/>
+            android:text="Впервые здесь?"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/go_to_register_activity_tv"
             android:textColor="@color/blue"
-            android:text="Sign up"
+            android:text="зарегистрируйтесь"
             android:layout_marginStart="7dp"/>
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="or login with "
+            android:text="или войдите в "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sign_up_btn"
